@@ -1,0 +1,74 @@
+* VueJS: Componentes
+El objetivo de esta práctica es profundizar en el uso del framework [[https://vuejs.org/][VueJS]]. Utilizaremos como material de base los videotutoriales siguientes (en inglés con subtítulos en castellano):
+- https://vueschool.io/courses/vuejs-components-fundamentals
+- Documentación completa de VueJS: https://vuejs.org/guide/introduction.html
+
+** Archivos de la práctica
+En el repositorio se incluye un archivo ~index.html~ y un archivo ~js/script.js~.
+
+- El archivo ~index.html~ debe utilizarse para realizar la tarea.
+- El archivo ~js/script.js~ contiene el código para inicializar la instancia de VueJS junto con los *datos de prueba* que se deberán mostrar correctamente formateados en el archivo ~index.html~.
+
+También se incluye en el repositorio un conjunto de archivos que se utilizarán para realizar *tests*. Dichos tests se podrán utilizar para comprobar si la práctica se ha realizado correctamente. Los tests se podrán ejecutar el número de veces que sea necesario.
+
+** Requisitos de software
+Para poder realizar esta práctica y que funcione adecuadamente el entorno de test será necesario *instalar el siguiente software* en el equipo:
+- Navegador [[https://www.google.com/intl/es/chrome/][Chrome]].
+- Entorno de ejecución [[https://nodejs.org/es/][NodeJS]].
+
+** Desarrollo guiado por test
+Para realizar la práctica se seguirán los principios del [[https://es.wikipedia.org/wiki/Desarrollo_guiado_por_pruebas][Desarrollo Guiado por Test]]. Para ello se proporciona en el repositorio una serie de ficheros que permiten *ejecutar tests*. Dichos tests comprobarán que la web cumple con algunos de los requisitos de la práctica.
+
+** Preparación
+1. Instalar los requisitos de software indicados
+2. Abrir un terminal
+3. Clonar el repositorio al equipo local mediante ~git clone~
+4. Acceder a la carpeta del repositorio
+5. Ejecutar el comando ~npm install~. Este comando instalará todas las librerías de Node necesarias para ejecutar los tests. Dichas librerías se guardarán en una carpeta con nombre ~node_modules~ dentro del repositorio. Nótese que dicha carpeta está excluida del repositorio en el archivo ~.gitignore~.
+6. Ejecutar el comando ~npm test~ para lanzar los tests. Este comando podrá ejecutarse tantas veces como sea necesario. Por pantalla se mostrarán los tests que se pasan y los que no, de manera que se tendrá información sobre las acciones que hay que realizar.
+
+** Tareas a realizar
+Esta práctica es una continuación de la práctica de /Introducción a VueJS/. Se podrá reutilizar parte del código HTML creado para dicha práctica *copiando trozos de código*. *En ningún caso hay que reemplazar los archivos* ~index.html~ y ~js/script.js~. 
+
+Se pretende mejorar la aplicación creada anteriormente de manera que se puedan *editar los datos*. Se utilizará [[https://getbootstrap.com/docs/5.3/getting-started/introduction/][Bootstrap 5]] para el formato visual. El resultado de la aplicación será el siguiente:
+
+[[./imagenes/funcionamiento.gif][./imagenes/funcionamiento.gif]]
+
+Se deberán crear la aplicación VueJS junto con *2 componentes* de VueJS utilizando la **Composition API** de Vue 3, tal como se explica en la documentación oficial. Los componentes se definirán directamente en el archivo ~js/script.js~.
+
+*** Aplicación VueJS
+  - Se encargará de mostrar el título de la colección (igual que en la práctica anterior) y de recorrer el array ~collection.items~. Para cada ~item~ *creará un componente* ~item-data~ *pasándole los parámetros correspondientes* para que pueda mostrar los datos adecuadamente.
+
+*** Componente ~item-data~
+- Plantilla:
+  - Se utilizará para mostrar los datos de cada película, tal como se hizo en la práctica anterior.
+  - *Bloque de listado de datos*, [[https://vuejs.org/guide/essentials/conditional.html][visible inicialmente]] (para ello se utilizará una variable reactiva).
+    - Mostrará los datos (array ~data~) en una lista de definición.
+    - Mostrará un botón ~Ver~ que enlace con la propiedad ~href~ del ítem.
+    - Mostrará un *botón* ~Editar~. Este botón realizará una llamada al [[https://vuejs.org/guide/essentials/event-handling.html][método]] ~toggleEditFormVisibility~.
+  - *Bloque de edición*. Constará de un componente ~edit-form~ *al que se le pasarán los parámetros* del array ~data~ del ítem para que pueda mostrar los datos adecuadamente. Este componente [[https://vuejs.org/guide/essentials/conditional.html][no será visible inicialmente]] (para ello se utilizará una variable reactiva).
+    - El componente ~edit-form~ emitirá un evento con nombre ~formClosed~ indicando que se ha terminado la edición. Se debe crear el código necesario para [[https://vuejs.org/guide/components/events.html][detectar dicho evento]] y llamar al método ~toggleEditFormVisibility~ para ocultar el formulario y volver a mostrar los datos.
+- Parámetros:
+  - ~item~ - Parámetro que contiene la información del ítem
+  - ~index~ - Parámetro opcional. Índice del [[https://vuejs.org/guide/essentials/list.html][número de ítem]] que se está procesando.
+- Métodos:
+  - Se creará el método ~toggleEditFormVisibility~ para que se muestre el formulario de edición. Esta función se ejecutará al pulsar el botón ~Editar~. La función se encargará de *alternar la vista* entre el bloque de listado de datos y el bloque de edición.
+  - Para implementar la funcionalidad de ocultar / mostrar se deberá utilizar una [[https://vuejs.org/guide/components/state.html][variable reactiva]] que almacene el estado visible / invisible. El método se encargará de modificar dicha variable; y la variable se utilizará en la plantilla del componente para [[https://vuejs.org/guide/essentials/conditional.html][ocultar o mostrar]] los bloques correspondientes.
+
+*** Componente ~edit-form~
+- Plantilla:
+  - Se utilizará para mostrar un formulario de edición con los datos del ítem. Para ello se utilizará el parámetro ~itemdata~.
+  - Los campos del formulario estarán [[https://vuejs.org/guide/essentials/forms.html][enlazados con los datos del ítem correspondiente]], de manera que al modificar un campo se modifique el valor del dato asociado.
+  - Mostrará un *botón* ~Cerrar~. Este botón realizará una llamada al [[https://vuejs.org/guide/essentials/event-handling.html][método]] ~closeForm~.
+  - *OPCIONAL* - Averiguar de qué manera se pueden crear etiquetas conectadas con los campos del formulario. Hay que tener en cuenta que cada campo de *los 3 formularios* deberá tener un atributo ~id~ distinto. *Pista*: se puede utilizar el parámetro ~index~ (que almacena el número de ítem, siendo 0 el primero) y el campo ~name~ de los datos de cada ítem para crear un ~id~ único para cada campo de cada formulario.
+- Parámetros:
+  - ~itemdata~ - Parámetro que contiene el array ~data~ del ítem correspondiente.
+  - ~index~ - Parámetro opcional. Índice del [[https://vuejs.org/guide/essentials/list.html][número de ítem]] que se está procesando.
+- Métodos:
+  - Se creará el método ~closeForm~ para cerrar el formulario de edición. Este método únicamente [[https://vuejs.org/guide/components/events.html][emitirá un evento]] ~formClosed~ para indicar al componente padre (componente ~item-data~) que el formulario se ha cerrado. El componente padre (~item-data~) es el que detectará dicho evento y llamará a su función ~toggleEditFormVisibility~, tal como se ha explicado anteriormente, que se encargará de cambiar la visibilidad ocultando el formulario y volviendo a mostrar el bloque de listado de datos.
+
+** Formato de la entrega
+- Cada alumno dispondrá de un repositorio en GitHub para su trabajo personal. Dicho repositorio se creará automáticamente al hacer clic en el enlace y aceptar la tarea (/assignment/).
+- Todos los archivos de la práctica se guardarán en el repositorio y se subirán a GitHub periódicamente. Es conveniente ir subiendo los cambios aunque no sean definitivos.
+- Para cualquier tipo de *duda o consulta* se pueden abrir ~Issues~ haciendo referencia al profesor mediante el texto ~@antonioroig~ dentro del texto del ~Issue~.
+- Una vez *finalizada* la tarea se debe crear un ~Issue~ en el repositorio haciendo referencia al profesor incluyendo el texto ~@antonioroig~ dentro del ~Issue~.

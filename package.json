@@ -1,0 +1,17 @@
+{
+  "title": "DIW Práctica VueJS: Componentes",
+  "name": "practica_diw_vuejs_componentes",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "nightwatch --env default"
+  },
+  "description": "Práctica de Componentes de VueJS del módulo de Diseño de Interfaces Web.",
+  "license": "GPL-3.0",
+  "author": "Pedro Prieto",
+  "dependencies": {},
+  "devDependencies": {
+    "chromedriver": "^96.0.0",
+    "nightwatch": "^1.7.13",
+    "serve-handler": "^6.1.3"
+  }
+}
