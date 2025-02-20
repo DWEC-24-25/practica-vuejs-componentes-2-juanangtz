@@ -37,49 +37,94 @@ const server_data = {
     }
 };
 
-// Componente edit-form
-const EditForm = defineComponent({
+const { createApp, reactive, ref } = Vue;
+
+// Componente edit-form 
+const EditForm = {
+    props: {
+        itemData: {
+            type: Array,
+            required: true
+        }
+    },
+    emits: ["formClosed"], 
+    setup(props, { emit }) {
+        const cerrarFormulario = () => {
+            emit("formClosed");
+        };
+
+        return { cerrarFormulario };
+    },
     template: `
-        <div>
-            <h2>Edit Form</h2>
-            <!-- Aquí iría el formulario de edición -->
+        <div class="card mt-3 p-3">
+            <h3>Editar Película</h3>
+            <form>
+                <div v-for="(campo, i) in itemData" :key="i" class="mb-3">
+                    <label :for="'campo-' + campo.name" class="form-label">{{ campo.prompt }}</label>
+                    <input 
+                        :id="'campo-' + campo.name" 
+                        v-model="campo.value" 
+                        type="text" 
+                        class="form-control"
+                    />
+                </div>
+                <button type="button" class="btn btn-secondary" @click="cerrarFormulario">Cerrar</button>
+            </form>
         </div>
     `
-});
+};
 
 // Componente item-data
-const ItemData = defineComponent({
+const ItemData = {
     props: {
         item: {
             type: Object,
             required: true
         }
     },
+    setup(props) {
+        const formularioVisible = ref(false); 
+        const alternarFormulario = () => {
+            formularioVisible.value = !formularioVisible.value;
+        };
+
+        return { formularioVisible, alternarFormulario };
+    },
     template: `
-        <div>
-            <h3>{{ item.data.find(d => d.name === 'name').value }}</h3>
-            <p>{{ item.data.find(d => d.name === 'description').value }}</p>
-            <p><strong>Director:</strong> {{ item.data.find(d => d.name === 'director').value }}</p>
-            <p><strong>Release Date:</strong> {{ item.data.find(d => d.name === 'datePublished').value }}</p>
-            <a :href="item.href" target="_blank">More Info</a>
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div v-if="!formularioVisible">
+                        <h3 class="card-title">{{ item.data.find(d => d.name === 'name').value }}</h3>
+                        <p class="card-text">{{ item.data.find(d => d.name === 'description').value }}</p>
+                        <p><strong>Director:</strong> {{ item.data.find(d => d.name === 'director').value }}</p>
+                        <p><strong>Fecha de Estreno:</strong> {{ item.data.find(d => d.name === 'datePublished').value }}</p>
+                        <a :href="item.href" target="_blank" class="btn btn-primary">Ver Más</a>
+                        <button class="btn btn-warning ms-2" @click="alternarFormulario">Editar</button>
+                    </div>
+                    
+                    <edit-form 
+                        v-else 
+                        :itemData="item.data" 
+                        @formClosed="alternarFormulario"
+                    ></edit-form>
+                </div>
+            </div>
         </div>
     `
-});
+};
 
 // Crear la aplicación Vue
 const app = createApp({
     setup() {
-        const col = vue.reactive(server_data.collection);
-
-        return {
-            col
-        };
+        const col = reactive(server_data.collection);
+        return { col };
     }
 });
 
-// Registrar los componentes globalmente
-app.component('edit-form', EditForm);
-app.component('item-data', ItemData);
+// Registrar componentes
+app.component("edit-form", EditForm);
+app.component("item-data", ItemData);
 
 // Montar la aplicación en el elemento con id 'app'
-app.mount('#app');
+app.mount("#app");
