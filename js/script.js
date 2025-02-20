@@ -69,7 +69,7 @@ const ItemData = defineComponent({
 // Crear la aplicación Vue
 const app = createApp({
     setup() {
-        const col = reactive(server_data.collection);
+        const col = vue.reactive(server_data.collection);
 
         return {
             col
